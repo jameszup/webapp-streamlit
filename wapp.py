@@ -10,3 +10,4 @@ if name:
 number = st.slider("Pick a number", 1, 100)
 
 st.write("You selected:", number)
+st.write("naeedit ba sya guys?")
