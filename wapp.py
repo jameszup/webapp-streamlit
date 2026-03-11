@@ -36,6 +36,7 @@ if page == "Register Member":
     st.image("https://api.deepai.org/job-view-file/d10fcd44-abf9-4fad-a548-238ebb81f448/outputs/output.jpg",
                 width=240 )
     st.title("Gym's Belen")
+    st.text("sarcasm lang yung name!")
 
     st.subheader("Enter Member Information")
 
