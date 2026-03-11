@@ -1,126 +1,241 @@
 import streamlit as st
+import random
 import pandas as pd
-import datetime
+from datetime import date
 
-st.set_page_config(page_title="Student Study Tracker")
+st.set_page_config(page_title="Gym's Belen", layout="wide")
 
-# Sidebar navigation
-st.sidebar.title("Menu")
-page = st.sidebar.selectbox(
-    "Choose a page",
-    ["Home", "Study Input", "Feedback", "About"]
+
+# Session storage
+
+if "members" not in st.session_state:
+    st.session_state.members = []
+
+# Unique Membership Number
+
+def generate_member_id():
+    return f"GYM-{random.randint(100000,999999)}"
+
+# Sidebar 
+
+st.sidebar.title("Navigation")
+page = st.sidebar.radio(
+    "Go to",
+    ["Register Member", "Member Dashboard", "Membership Card", "About"]
 )
 
-# ---------------- HOME PAGE ----------------
-if page == "Home":
+st.sidebar.divider()
 
-    st.title("📚 Student Study Tracker")
+st.sidebar.write("Quick Options")
+show_data = st.sidebar.checkbox("Show Stored Data")
+notifications = st.sidebar.toggle("Enable Notifications")
 
-    st.header("Welcome")
+# Register Member Page
 
-    name = st.text_input("Enter your name")
+if page == "Register Member":
+    st.image("https://api.deepai.org/job-view-file/d10fcd44-abf9-4fad-a548-238ebb81f448/outputs/output.jpg",
+                width=240 )
+    st.title("Gym's Belen")
 
-    age = st.number_input("Enter your age", 10, 100)
+    st.subheader("Enter Member Information")
 
-    course = st.selectbox(
-        "Select your course",
-        ["IT", "Engineering", "Business", "Arts"]
-    )
+    with st.form("membership_form", clear_on_submit=True):
 
-    study_hours = st.slider("Hours you study per day", 0, 12)
+        name = st.text_input(
+            "Full Name",
+            autocomplete="off"
+        )
 
-    today = st.date_input("Select today's date")
+        age = st.number_input(
+            "Age",
+            min_value=10,
+            max_value=100,
+            step=1
+        )
 
-    st.write("### Your Information")
-    st.write("Name:", name)
-    st.write("Age:", age)
-    st.write("Course:", course)
-    st.write("Study hours:", study_hours)
+        membership = st.selectbox(
+            "Membership Type",
+            ["Normal", "Gold", "Diamond"]
+        )
 
-    st.progress(study_hours / 12)
+        start_date = st.date_input(
+            "Membership Start Date",
+            value=date.today()
+        )
 
-# ---------------- STUDY INPUT PAGE ----------------
-elif page == "Study Input":
+        duration = st.slider(
+            "Membership Duration (months)",
+            1, 24, 6
+        )
 
-    st.title("✏ Study Session")
+        email = st.text_input(
+            "Email Address",
+            autocomplete="off"
+        )
 
-    subject = st.text_input("Subject studied today")
+        phone = st.text_input(
+            "Phone Number",
+            autocomplete="off"
+        )
 
-    difficulty = st.radio(
-        "Difficulty level",
-        ["Easy", "Medium", "Hard"]
-    )
+        notes = st.text_area("Notes")
 
-    materials = st.multiselect(
-        "Study materials used",
-        ["Book", "Laptop", "Notes", "Internet"]
-    )
+        agree = st.checkbox("I confirm that the information is correct")
 
-    reminder = st.time_input("Study reminder time")
+        submitted = st.form_submit_button("Create Membership")
 
-    file = st.file_uploader("Upload notes (optional)")
+    if submitted and agree:
 
-    note = st.text_area("Write a short note about today's study")
+        # Prevent duplicate member
+        duplicate = any(
+            m["Name"] == name and
+            m["Age"] == age and
+            m["Membership"] == membership
+            for m in st.session_state.members
+        )
 
-    if st.button("Save Study Session"):
-        st.success("Study session saved!")
+        if duplicate:
+            st.error("This member is already registered.")
+        else:
 
-# ---------------- FEEDBACK PAGE ----------------
-elif page == "Feedback":
+            member_id = generate_member_id()
 
-    st.title("⭐ Student Feedback")
+            new_member = {
+                "ID": member_id,
+                "Name": name,
+                "Age": age,
+                "Membership": membership,
+                "Start": start_date,
+                "Duration": duration
+            }
 
-    rating = st.slider("Rate your productivity today", 1, 10)
+            st.session_state.members.append(new_member)
 
-    mood = st.selectbox(
-        "How do you feel today?",
-        ["Happy", "Okay", "Tired", "Stressed"]
-    )
+            st.success("Membership Created Successfully!")
+            st.info(f"Membership Number: {member_id}")
+            st.balloons()
 
-    agree = st.checkbox("I completed my study goals")
+          
+            st.rerun()
 
-    color = st.color_picker("Pick your favorite study color")
+# Dashboard Page
 
-    with st.expander("Click to leave additional feedback"):
-        comment = st.text_area("Additional comments")
+elif page == "Member Dashboard":
 
-    st.write("Your rating:", rating)
-    st.write("Mood:", mood)
+    st.title("Member Dashboard")
 
-# ---------------- ABOUT PAGE ----------------
+    total_members = len(st.session_state.members)
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("Total Members", total_members)
+
+    with col2:
+        gold_count = sum(1 for m in st.session_state.members if m["Membership"] == "Gold")
+        st.metric("Gold Members", gold_count)
+
+    with col3:
+        diamond_count = sum(1 for m in st.session_state.members if m["Membership"] == "Diamond")
+        st.metric("Diamond Members", diamond_count)
+
+    st.divider()
+
+    if total_members > 0:
+
+        df = pd.DataFrame(st.session_state.members)
+
+        st.dataframe(df)
+
+
+        
+
+    else:
+        st.warning("No members registered yet.")
+
+# Membership Card view
+
+elif page == "Membership Card":
+
+    st.title("Membership Card Preview")
+
+    if len(st.session_state.members) == 0:
+        st.warning("No members available.")
+    else:
+
+        member_names = [m["Name"] for m in st.session_state.members]
+
+        selected = st.selectbox(
+            "Select Member",
+            member_names
+        )
+
+        member = next(m for m in st.session_state.members if m["Name"] == selected)
+
+        st.subheader("Gym Membership Card")
+
+        st.markdown("---")
+
+        col1, col2 = st.columns([1,2])
+
+        with col1:
+            st.image(
+                "https://api.deepai.org/job-view-file/d10fcd44-abf9-4fad-a548-238ebb81f448/outputs/output.jpg",
+                width=290
+            )
+
+        with col2:
+            st.write(f"**Name:** {member['Name']}")
+            st.write(f"**Age:** {member['Age']}")
+            st.write(f"**Membership Type:** {member['Membership']}")
+            st.write(f"**Member ID:** {member['ID']}")
+
+        st.progress(0.9)
+
+        st.caption("Valid only for registered gym members.")
+
+# About Page (Required)
+
 elif page == "About":
 
-    st.title("About This App")
+    st.title("ℹ About This App")
 
-    st.header("What the App Does")
-    st.write("""
-    This app helps students track their daily study sessions,
-    record study hours, and give feedback about their productivity.
+    st.markdown("""
+    ### Gym Membership Management System
+
+    This application is made for managing gym memberships.
+
+    Features included:
+
+    - Member registration
+    - Unique membership ID 
+    - Dashboard analytics
+    - Membership card viewing
+    
+
+    ### Membership Types
+
+    *Normal**
+    - Basic gym access
+
+    **Gold**
+    - Gym + group classes
+
+    **Diamond**
+    - Full access + personal trainer
+
+    ### Technology
+
+    To make every gym member a unique number.
+
     """)
 
-    st.header("Target Users")
-    st.write("""
-    Students who want to monitor their study habits and
-    improve productivity.
-    """)
+    st.info("Contact us for more information.")
 
-    st.header("Inputs Collected")
-    st.write("""
-    - Name and age
-    - Course
-    - Study hours
-    - Subject studied
-    - Difficulty level
-    - Study materials
-    - Productivity rating
-    """)
+    st.feedback("thumbs")
 
-    st.header("Outputs Displayed")
-    st.write("""
-    - Study summary
-    - Progress bar for study hours
-    - Productivity rating
-    - User feedback
-    """)
+# Optional Debug Data View
 
-    st.caption("Created using Streamlit UI Components")
+if show_data:
+    st.sidebar.write("Stored Data")
+    st.sidebar.write(st.session_state.members)
