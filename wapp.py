@@ -227,70 +227,93 @@ elif page == "About":
 
     ### UI Components used
 
-    "st.set_page_config(page_title="Gym's Belen", layout="wide")"
+    "st.set_page_config(page_title="Gym's Belen", layout="wide")              
     it is used for controlling browser tab title
-    "st.sidebar.title("Navigation")"
-    this display the title of the sidebar
-    "page = st.sidebar.radio("Go to", [...])"
-    this is used to select one page at a time
-    "st.sidebar.divider()"
-    to separate the quick option to the go to
-    "st.sidebar.write("Quick Options")"
-    display text
-    "show_data = st.sidebar.checkbox("Show Stored Data")"
-    this shows stored data when togled
-    "notifications = st.sidebar.toggle("Enable Notifications")"
-    to toggle the hide or show of the effects and the text after confirmation
-    "st.image("image_url", width=240)"
-    to show the image or the logo I created using AI
-    "st.title("Gym's Belen")"
-    to show title
-    "st.text("sarcasm lang yung name!")"
-    to show text thats explaining the title is just a joke to fit in James Belen to Gym's Belen
-    "st.subheader("Enter Member Information")"
-    this is used to show that the user to put member infos
-    "with st.form("membership_form", clear_on_submit=True):"
-    groups into a form that sumbits together
-    "name = st.text_input("Full Name")"
-    this creates a textbox for user input
-    "age = st.number_input("Age")"
-    allows numeric input only
-    "membership = st.selectbox("Membership Type", [...])"
-    to select if the membership type is normal, gold, and diamond membership
-    "start_date = st.date_input("Membership Start Date")"
-    creates a calendar date picker
-    "duration = st.slider("Membership Duration (months)",1,24,6)"
-    lets user to select how long is the duration of its membership
-    "notes = st.text_area("Notes")"
-    to give notes
-    "agree = st.checkbox("I confirm that the information is correct")"
-    the user must confirm before submission
-    "submitted = st.form_submit_button("Create Membership")"
-    this submits the form
-    "st.success("Membership Created Successfully!")"
-    this displays when the membership submission is done
-    "st.info(f"Membership Number: member_id}")"
-    displays an informational message
-    "st.error("This member is already registered.")"
-    to show if the user puts the same info
-    "st.balloons()"
-    displays baloons
-    "col1, col2, col3 = st.columns(3)"
-    creates columns for layout. Used in dashboard
-    "st.metric("Total Members", total_members)"
-    displays the statistics
-    "st.dataframe(df)"
-    this displays table with users information
-    "st.markdown("---")"
-    displays markdown with format
-    "
-    
                 
-
-
+    "st.sidebar.title("Navigation")               
+    this display the title of the sidebar
+                
+    "page = st.sidebar.radio("Go to", [...])
+     this is used to select one page at a time
+                
+    "st.sidebar.divider()
+     to separate the quick option to the go to
+                
+    "st.sidebar.write("Quick Options")
+     display text
+                
+    "show_data = st.sidebar.checkbox("Show Stored Data")
+    this shows stored data when togled
+                
+    "notifications = st.sidebar.toggle("Enable Notifications")
+    to toggle the hide or show of the effects and the text after confirmation
+                
+    "st.image("image_url", width=240)
+    to show the image or the logo I created using AI
+                
+    "st.title("Gym's Belen")
+    to show title
+                
+    "st.text("sarcasm lang yung name!")
+    to show text thats explaining the title is just a joke to fit in James Belen to Gym's Belen
+                
+    "st.subheader("Enter Member Information")
+    this is used to show that the user to put member infos
+                
+    "with st.form("membership_form", clear_on_submit=True):
+    groups into a form that sumbits together
+                
+    "name = st.text_input("Full Name")
+    this creates a textbox for user input
+                
+    "age = st.number_input("Age")
+    allows numeric input only
+                
+    "membership = st.selectbox("Membership Type", [...])
+    to select if the membership type is normal, gold, and diamond membership
+                
+    "start_date = st.date_input("Membership Start Date")
+    creates a calendar date picker
+                
+    "duration = st.slider("Membership Duration (months)",1,24,6)
+    lets user to select how long is the duration of its membership
+                
+    "notes = st.text_area("Notes")
+    to give notes
+                
+    "agree = st.checkbox("I confirm that the information is correct")
+    the user must confirm before submission
+                
+    "submitted = st.form_submit_button("Create Membership")
+    this submits the form
+                
+    "st.success("Membership Created Successfully!")
+    this displays when the membership submission is done
+                
+    "st.info(f"Membership Number: member_id}")
+    displays an informational message
+                
+    "st.error("This member is already registered.")
+    to show if the user puts the same info
+                
+    "st.balloons()
+    displays baloons
+                
+    "col1, col2, col3 = st.columns(3)
+    creates columns for layout. Used in dashboard
+                
+    "st.metric("Total Members", total_members)
+    displays the statistics
+                
+    "st.dataframe(df)
+    this displays table with users information
+                
+    "st.markdown("---")
+    displays markdown with format
+    
     """)
 
-    st.info("Contact us for more information.")
+    st.info("Contact the Creator for more information.")
 
     st.feedback("thumbs")
 
